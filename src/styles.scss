@@ -65,9 +65,23 @@ footer {
   object-fit: cover;
 }
 
+.navbar-toggler.menusrcoll {
+  background-color: whitesmoke;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+}
+
+.cad-item {
+  margin-bottom: 10px;
+}
+
 @media (max-width: 768px) {
   .img-dimmed {
     height: 250px;
+  }
+
+  .cad-item {
+    margin-bottom: 5px;
   }
 }
 

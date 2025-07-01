@@ -1,4 +1,4 @@
-<nav class="navbar  sticky-navbar" [class.scrolled]="isScrolled">
+<nav class="navbar sticky-navbar" [class.scrolled]="isScrolled">
   <div class="container-fluid">
     <a
       class="navbar-brand d-flex align-items-center gap-2"
@@ -10,7 +10,7 @@
         width="80"
         height="40"
         class="d-inline-block align-text-top"
-    />
+      />
     </a>
     <button
       class="navbar-toggler"
@@ -19,11 +19,12 @@
       data-bs-target="#offcanvasNavbar"
       aria-controls="offcanvasNavbar"
       aria-label="Toggle navigation"
-      
+      [class.menusrcoll]="isScrolled"
     >
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div
+
+        <div
       class="offcanvas offcanvas-end"
       tabindex="-1"
       id="offcanvasNavbar"
@@ -59,5 +60,8 @@
       </div>
     </div>
   </div>
+
+  
 </nav>
+
 
