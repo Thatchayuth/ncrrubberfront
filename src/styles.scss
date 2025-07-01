@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&display=swap');
+
+body {
+  font-family: 'Kanit', sans-serif !important;
+  // padding-top: 56px;
+  /* สูงของ navbar fixed-top ปรับตามจริง */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+  /* ให้ main ส่วนขยายเต็มพื้นที่ */
+}
+
+footer {
+  flex-shrink: 0;
+  /* ให้ footer อยู่ล่างสุด */
+}
+
+.container-minwidth {
+  width: 100%;
+  min-width: 0;
+  /* ค่าเริ่มต้น */
+  max-width: 100%;
+
+  /* สำหรับหน้าจอใหญ่กว่า 1800px */
+  @media (min-width: 1800px) {
+    min-width: 1800px;
+    max-width: 1800px;
+    /* จำกัดไม่ให้กว้างเกิน */
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.sticky-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1050;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+
+
+  background-color: rgba(255, 255, 255, 0.95); // หรือใช้ #fff ก็ได้
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sticky-navbar.scrolled {
+  background-color: transparent;
+  backdrop-filter: blur(4px);
+  border-bottom: none;
+}
+
+.offcanvas {
+  position: fixed !important;
+  top: 0 !important;
+  height: 100vh !important;
+}
+
+.img-dimmed {
+  filter: brightness(70%);
+  height: 400px; // Set your desired fixed height
+  object-fit: cover;
+}
+
+@media (max-width: 768px) {
+  .img-dimmed {
+    height: 250px;
+  }
+}
+
+@media (max-width: 576px) {
+  .img-dimmed {
+    height: 150px;
+  }
+
+
+}
+
+
+// .fixed-top + * {
+//   margin-top: 100px; /* ปรับตามความสูง navbar */
+// }
+
+// nav.fixed-top + .main-content {
+//   margin-top: 80px; /* ปรับตามความสูง navbar */
+// }
