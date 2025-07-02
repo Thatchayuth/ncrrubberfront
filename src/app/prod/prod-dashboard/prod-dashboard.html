@@ -1,0 +1,38 @@
+<div class="container mt-4">
+      <h2 class="mb-4">📊 สถานะการผลิตสินค้า</h2>
+      <table class="table table-bordered table-hover">
+        <thead class="table-light">
+          <tr>
+            <th>สินค้า</th>
+            <th>เริ่มผลิต</th>
+            <th>เวลาเสร็จ (AI)</th>
+            <th>เวลาเสร็จจริง</th>
+            <th>ความต่าง</th>
+            <th>สถานะ</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of productionData">
+            <td>{{ item.productName }}</td>
+            <td>{{ item.startTime }}</td>
+            <td>{{ item.aiEstimatedEndTime }}</td>
+            <td>{{ item.actualEndTime || '-' }}</td>
+            <td>
+              <span [ngClass]="{'text-danger': item.delta > 0, 'text-success': item.delta <= 0}">
+                {{ item.delta }} นาที
+              </span>
+            </td>
+            <td>
+              <span class="badge"
+                    [ngClass]="{
+                      'bg-success': item.status === 'เสร็จแล้ว',
+                      'bg-warning': item.status === 'กำลังผลิต',
+                      'bg-secondary': item.status === 'รอผลิต'
+                    }">
+                {{ item.status }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
