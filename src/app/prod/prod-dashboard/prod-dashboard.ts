@@ -9,22 +9,34 @@ import { Component } from '@angular/core';
   styleUrl: './prod-dashboard.scss'
 })
 export class ProdDashboard {
- productionData = [
+ machines = [
     {
-      productName: 'ยางปิดผิว B-201',
+      name: 'เครื่อง A1',
+      department: 'แผนกรีดยาง',
+      product: 'ยางปิดผิว 3R',
+      quantity: 120,
       startTime: '08:00',
-      aiEstimatedEndTime: '08:45',
-      actualEndTime: '08:55',
-      delta: 10,
-      status: 'เสร็จแล้ว'
+      estimatedEndTime: '09:00',
+      actualEndTime: '09:10',
+      status : "active"
     },
     {
-      productName: 'ชิ้นงาน 3A',
-      startTime: '09:00',
-      aiEstimatedEndTime: '09:30',
-      actualEndTime: null,
-      delta: 0,
-      status: 'กำลังผลิต'
+      name: 'เครื่อง B2',
+      department: 'แผนกอัดยาง',
+      product: 'ยางลาย 2A',
+      quantity: 80,
+      startTime: '09:15',
+      estimatedEndTime: '10:00',
+      actualEndTime: null
+    },
+    {
+      name: 'เครื่อง C3',
+      department: 'แผนกพิมพ์ลาย',
+      product: 'ยางปั๊มลาย 5D',
+      quantity: 60,
+      startTime: '08:30',
+      estimatedEndTime: '09:30',
+      actualEndTime: '09:25'
     }
   ];
 }

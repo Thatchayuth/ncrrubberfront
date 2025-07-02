@@ -1,38 +1,73 @@
-<div class="container mt-4">
-      <h2 class="mb-4">📊 สถานะการผลิตสินค้า</h2>
-      <table class="table table-bordered table-hover">
-        <thead class="table-light">
-          <tr>
-            <th>สินค้า</th>
-            <th>เริ่มผลิต</th>
-            <th>เวลาเสร็จ (AI)</th>
-            <th>เวลาเสร็จจริง</th>
-            <th>ความต่าง</th>
-            <th>สถานะ</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of productionData">
-            <td>{{ item.productName }}</td>
-            <td>{{ item.startTime }}</td>
-            <td>{{ item.aiEstimatedEndTime }}</td>
-            <td>{{ item.actualEndTime || '-' }}</td>
-            <td>
-              <span [ngClass]="{'text-danger': item.delta > 0, 'text-success': item.delta <= 0}">
-                {{ item.delta }} นาที
-              </span>
-            </td>
-            <td>
-              <span class="badge"
-                    [ngClass]="{
-                      'bg-success': item.status === 'เสร็จแล้ว',
-                      'bg-warning': item.status === 'กำลังผลิต',
-                      'bg-secondary': item.status === 'รอผลิต'
-                    }">
-                {{ item.status }}
-              </span>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+<div class="container my-4">
+  <h2 class="mb-4"><i class="fas fa-industry me-2"></i>สถานะการผลิต</h2>
+
+  <div class="row g-4">
+    <div class="col-md-4" *ngFor="let machine of machines">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="card-title text-primary">
+              <i class="fas fa-cogs me-2"></i>{{ machine.name }}
+            </h5>
+            <span
+              class="badge"
+              [ngClass]="{
+                'bg-success': machine.status === 'active',
+                'bg-secondary': machine.status === 'inactive'
+              }"
+            >
+              {{ machine.status === "active" ? "กำลังทำงาน" : "หยุดทำงาน" }}
+            </span>
+          </div>
+
+          <h6 class="card-subtitle mb-2 text-muted">
+            {{ machine.department }}
+          </h6>
+
+          <ul class="list-group list-group-flush my-3">
+            <li class="list-group-item">
+              <strong
+                ><i class="fas fa-box me-2 text-secondary"></i>ผลิต:</strong
+              >
+              {{ machine.product }}
+            </li>
+            <li class="list-group-item">
+              <strong
+                ><i class="fas fa-hashtag me-2 text-secondary"></i
+                >จำนวน:</strong
+              >
+              {{ machine.quantity }} หน่วย
+            </li>
+            <li class="list-group-item">
+              <strong
+                ><i class="fas fa-clock me-2 text-secondary"></i
+                >เวลาเริ่ม:</strong
+              >
+              {{ machine.startTime }}
+            </li>
+            <li class="list-group-item">
+              <strong
+                ><i class="fas fa-robot me-2 text-secondary"></i>เวลาคาด
+                (AI):</strong
+              >
+              {{ machine.estimatedEndTime }}
+            </li>
+            <li class="list-group-item">
+              <strong
+                ><i class="fas fa-check-circle me-2 text-secondary"></i
+                >เวลาเสร็จจริง:</strong
+              >
+              {{ machine.actualEndTime || "-" }}
+            </li>
+          </ul>
+
+          <div class="d-grid">
+            <button class="btn btn-outline-primary">
+              <i class="fas fa-list me-2"></i>ดูการผลิตทั้งหมด
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
