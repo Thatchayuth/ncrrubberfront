@@ -1,4 +1,9 @@
 <div class="container my-4">
+    <div class="text-center row">
+    <h1>{{ currentDate | date : "dd/MM/yyyy" }}</h1>
+     <h1>{{ currentDate | date : "HH:mm:ss" }}</h1>
+    </div>
+    
   <h2 class="mb-4"><i class="fas fa-industry me-2"></i>สถานะการผลิต</h2>
 
   <div class="row g-4">
@@ -53,11 +58,11 @@
               {{ machine.estimatedEndTime }}
             </li>
             <li class="list-group-item">
-              <strong
+              <strong [ngStyle]="{ 'color': machine.status === 'active' ? 'green' : 'gray' }"
                 ><i class="fas fa-check-circle me-2 text-secondary"></i
-                >เวลาเสร็จจริง:</strong
+                >{{machine.status === 'active' ? 'เวลาเกิน' : 'เวลาเสร็จจริง'}}:</strong
               >
-              {{ machine.actualEndTime || "-" }}
+              {{ machine.status === 'active' ? (machine.duration || '-') : machine.actualEndTime  }}
             </li>
           </ul>
 
