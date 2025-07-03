@@ -30,6 +30,7 @@
     "@angular/platform-server": "^20.0.0",
     "@angular/router": "^20.0.0",
     "@angular/ssr": "^20.0.4",
+    "@microsoft/signalr": "^8.0.7",
     "bootstrap": "^5.3.7",
     "express": "^5.1.0",
     "ngx-toastr": "^19.0.0",
