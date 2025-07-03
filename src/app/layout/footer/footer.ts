@@ -11,7 +11,7 @@ import { ChangeDetectorRef, Component, NgZone, OnDestroy, OnInit } from '@angula
 export class Footer implements OnInit, OnDestroy {
   intervalId: any;
   public currentDate: Date = new Date();
-  email = 'info@ncrrubber.com';
+  email = 'HoseCare@ncr-rubber.com';
 
   constructor(private ngZone: NgZone, private cdr: ChangeDetectorRef) {}
 

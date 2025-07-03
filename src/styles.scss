@@ -93,6 +93,44 @@ footer {
 
 }
 
+.ribbon {
+  width: 90px;
+  height: 90px;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.ribbon span {
+  position: absolute;
+  display: block;
+  width: 130px;
+  padding: 6px 0;
+  background: #dc3545;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+  transform: rotate(45deg);
+  top: 20px;
+  right: -30px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+}
+
+/* 👇 เพิ่มการกระพริบ */
+.blink span {
+  animation: blinkFade 2s infinite ease-in-out;
+}
+
+@keyframes blinkFade {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
 
 // .fixed-top + * {
 //   margin-top: 100px; /* ปรับตามความสูง navbar */

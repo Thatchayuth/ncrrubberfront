@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-
+import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-dashborad',
-  imports: [],
+  imports: [RouterModule],
   templateUrl: './dashborad.html',
   styleUrl: './dashborad.scss'
 })

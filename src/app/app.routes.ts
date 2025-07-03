@@ -6,4 +6,7 @@ export const routes: Routes = [
  { path: '', component: Dashborad,  pathMatch: 'full' },
  { path: 'dashborad', component: Dashborad },
  { path: 'prod', component : ProdDashboard },
+ { path: 'pagedetail',
+    loadChildren: () =>
+      import('./page/page-detail/page-detail.routes').then(m => m.routes) },
 ];
