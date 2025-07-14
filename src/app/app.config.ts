@@ -12,6 +12,7 @@ import {
 } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr';
+import { provideHttpClient } from '@angular/common/http';  // <-- เพิ่มบรรทัดนี้
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
@@ -24,5 +25,6 @@ export const appConfig: ApplicationConfig = {
       positionClass: 'toast-top-right',
       
     }),
+    provideHttpClient(),  // <-- เพิ่มบรรทัดนี้
   ],
 };

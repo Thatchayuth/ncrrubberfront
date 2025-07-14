@@ -86,46 +86,20 @@
 </div>
 
 <div class="row mt-3 text-center">
-  <div class="col-12 col-md-4">
-    
-    <div class="card cad-item">
-      <div class="ribbon blink"><span>ใหม่!</span></div>
-      <img src="assets/images/im2.jpg" class="card-img-top" alt="..." />
+  <div class="col-md-4" *ngFor="let article of articles">
+    <div class="card card-item">
+      <div class="ribbon blink" *ngIf="article.isPinned"><span>ใหม่!</span></div>
+
+      <img [src]="getImageUrl(article)" class="card-img-top" [alt]="article.title" />
+
       <div class="card-body">
         <p class="card-text">
-          Some quick example text to build on the card title and make up the
-          bulk of the card’s content.
+          {{ getPlainText(article.content) }}
         </p>
         <div class="d-flex gap-2 justify-content-end">
-          <button type="button" class="btn btn-light" [routerLink]="['/pagedetail/historynew']" >อ่านทั้งหมด</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-12 col-md-4">
-    <div class="card cad-item">
-      <img src="assets/images/im2.jpg" class="card-img-top" alt="..." />
-      <div class="card-body">
-        <p class="card-text">
-          Some quick example text to build on the card title and make up the
-          bulk of the card’s content.
-        </p>
-        <div class="d-flex gap-2 justify-content-end">
-          <button type="button" class="btn btn-light">อ่านทั้งหมด</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-12 col-md-4">
-    <div class="card cad-item">
-      <img src="assets/images/im2.jpg" class="card-img-top" alt="..." />
-      <div class="card-body">
-        <p class="card-text">
-          Some quick example text to build on the card title and make up the
-          bulk of the card’s content.
-        </p>
-        <div class="d-flex gap-2 justify-content-end">
-          <button type="button" class="btn btn-light">อ่านทั้งหมด</button>
+          <button type="button" class="btn btn-light" [routerLink]="['/pagedetail/historynew']">
+            อ่านทั้งหมด
+          </button>
         </div>
       </div>
     </div>
