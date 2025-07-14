@@ -1,46 +1,25 @@
-<div
-  #scrollContainer
-  class="flex-grow-1 overflow-auto mb-3 border rounded p-3 bg-light"
-  style="height: 70vh"
->
-  <div
-    *ngFor="let msg of messages"
-    [ngClass]="{
+<div #scrollContainer class="flex-grow-1 overflow-auto mb-3 border rounded p-3 bg-light" style="height: 70vh">
+  <div *ngFor="let msg of messages" [ngClass]="{
       'text-end': msg.role === 'user',
       'text-start': msg.role === 'assistant'
-    }"
-    class="mb-3"
-  >
-    <div
-      class="d-inline-block px-3 py-2 rounded"
-      [ngClass]="
+    }" class="mb-3">
+    <div class="d-inline-block px-3 py-2 rounded" [ngClass]="
         msg.role === 'user'
           ? 'bg-primary text-white'
           : 'bg-secondary text-white'
-      "
-    >
+      ">
       <div *ngIf="msg.content === '...'" class="typing-dots">
         <span>.</span><span>.</span><span>.</span>
       </div>
       <div *ngIf="msg.content !== '...'">{{ msg.content }}</div>
 
-      <div
-        *ngIf="msg.chartData"
-        style="
+      <div *ngIf="msg.chartData" style="
           width: 350px;
           height: 220px;
           margin-top: 1rem;
           background-color: white;
-        "
-        (click)="openChartModal(msg)"
-      >
-        <canvas
-          baseChart
-          [data]="msg.chartData"
-          [type]="msg.chartType"
-          [options]="msg.chartOptions"
-          
-          >
+        " (click)="openChartModal(msg)">
+        <canvas baseChart [data]="msg.chartData" [type]="msg.chartType" [options]="msg.chartOptions">
         </canvas>
       </div>
     </div>
@@ -48,33 +27,24 @@
 </div>
 
 <form (submit)="sendMessage()" class="d-flex gap-2">
-  <input
-    [(ngModel)]="userInput"
-    name="chatInput"
-    placeholder="พิมพ์ข้อความ..."
-    class="form-control"
-    autocomplete="off"
-  />
+  <input [(ngModel)]="userInput" name="chatInput" placeholder="พิมพ์ข้อความ..." class="form-control"
+    autocomplete="off" />
   <button type="submit" class="btn btn-primary">ส่ง</button>
 
 
   <div class="modal fade" id="chartModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">ดูกราฟขนาดเต็ม</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="ปิด"></button>
-      </div>
-      <div class="modal-body text-center" style="min-height: 400px;">
-        <canvas
-          baseChart
-          *ngIf="selectedChartData"
-          [data]="selectedChartData"
-          [type]="selectedChartType"
-          [options]="selectedChartOptions">
-        </canvas>
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">ดูกราฟขนาดเต็ม</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="ปิด"></button>
+        </div>
+        <div class="modal-body text-center" style="min-height: 400px;">
+          <canvas baseChart *ngIf="selectedChartData" [data]="selectedChartData" [type]="selectedChartType"
+            [options]="selectedChartOptions">
+          </canvas>
+        </div>
       </div>
     </div>
   </div>
-</div>
 </form>
