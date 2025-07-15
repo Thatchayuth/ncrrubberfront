@@ -7,6 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "build:ssr": "ng build && ng run TEST:server",
     "serve:ssr:TEST": "node dist/TEST/server/server.mjs"
   },
   "prettier": {
