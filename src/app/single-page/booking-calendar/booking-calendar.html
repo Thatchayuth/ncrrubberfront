@@ -1,0 +1,23 @@
+<div style="display: flex">
+  <!-- Sidebar -->
+ <div class="w-100" style="max-width: 200px; border-right: 1px solid #ccc; padding: 10px;">
+  <h5 class="mb-3">ห้องประชุม</h5>
+
+  <div class="list-group">
+    <button
+      type="button"
+      class="list-group-item list-group-item-action"
+      [class.active]="room.id === selectedRoomId"
+      *ngFor="let room of rooms"
+      (click)="selectRoom(room.id)"
+    >
+      {{ room.name }}
+    </button>
+  </div>
+</div>
+
+  <!-- Calendar -->
+  <div style="flex: 1; padding: 10px;">
+    <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+  </div>
+</div>
