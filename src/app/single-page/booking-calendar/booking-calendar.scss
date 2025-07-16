@@ -1,0 +1,31 @@
+.loading-text {
+  font-size: 1rem;
+  color: #6c757d; /* สีเทา bootstrap text-muted */
+  font-weight: 500;
+}
+
+.dots::after {
+  content: '.';
+  animation: blinkDot 1.5s steps(5, start) infinite;
+}
+
+.dots {
+  display: inline-block;
+  width: 1.2em;
+  position: relative;
+}
+
+@keyframes blinkDot {
+  0%, 20% {
+    color: transparent;
+  }
+  40% {
+    color: #6c757d;
+  }
+  60% {
+    color: transparent;
+  }
+  80%, 100% {
+    color: #6c757d;
+  }
+}

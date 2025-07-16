@@ -1,23 +1,126 @@
-<div style="display: flex">
+<div style="display: flex; min-height: 500px">
   <!-- Sidebar -->
- <div class="w-100" style="max-width: 200px; border-right: 1px solid #ccc; padding: 10px;">
-  <h5 class="mb-3">ห้องประชุม</h5>
+  <div
+    class="w-100"
+    style="max-width: 200px; border-right: 1px solid #ccc; padding: 10px"
+  >
+    <h5 class="mb-3">ห้องประชุม</h5>
 
-  <div class="list-group">
-    <button
-      type="button"
-      class="list-group-item list-group-item-action"
-      [class.active]="room.id === selectedRoomId"
-      *ngFor="let room of rooms"
-      (click)="selectRoom(room.id)"
+    <div
+      class="list-group"
+      *ngIf="rooms && rooms.length > 0; else loadingRooms"
+      style="max-height: 400px; overflow-y: auto"
     >
-      {{ room.name }}
-    </button>
+      <button
+        type="button"
+        class="list-group-item list-group-item-action"
+        [class.active]="room.id === selectedRoomId"
+        *ngFor="let room of rooms"
+        (click)="selectRoom(room.id)"
+      >
+        {{ room.name }}
+      </button>
+    </div>
+
+    <ng-template #loadingRooms>
+      <div class="loading-text">
+        กำลังโหลดห้องประชุม<span class="dots">...</span>
+      </div>
+    </ng-template>
+  </div>
+
+  <div style="flex: 1; padding: 10px">
+    <div *ngIf="!selectedRoomId" class="text-center text-muted fs-5 mt-5">
+      🏢 กรุณาเลือกห้องประชุมทางด้านซ้าย
+    </div>
+
+    <full-calendar *ngIf="selectedRoomId" #calendar [options]="calendarOptions">
+    </full-calendar>
   </div>
 </div>
 
-  <!-- Calendar -->
-  <div style="flex: 1; padding: 10px;">
-    <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+<div
+  class="modal fade"
+  id="bookingModal"
+  tabindex="-1"
+  aria-labelledby="bookingModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form (ngSubmit)="confirmBooking()" #bookingForm="ngForm">
+        <div class="modal-header">
+          <h5 class="modal-title" id="bookingModalLabel">
+            จองห้องประชุมวันที่
+            {{ bookingData.date && (bookingData.date | date : "dd MMMM yyyy") }}
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">หัวข้อ</label>
+            <input
+              class="form-control"
+              [(ngModel)]="bookingData.title"
+              name="title"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">รายละเอียด</label>
+            <textarea
+              class="form-control"
+              [(ngModel)]="bookingData.description"
+              name="description"
+            ></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">เวลาเริ่ม</label>
+            <input
+              type="time"
+              class="form-control"
+              [(ngModel)]="bookingData.startTime"
+              name="startTime"
+              required
+            />
+          </div>
+
+          <!-- เวลาสิ้นสุด -->
+          <div class="mb-3">
+            <label class="form-label">เวลาสิ้นสุด</label>
+            <input
+              type="time"
+              class="form-control"
+              [(ngModel)]="bookingData.endTime"
+              name="endTime"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="!bookingForm.form.valid"
+          >
+            ยืนยัน
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            ยกเลิก
+          </button>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
