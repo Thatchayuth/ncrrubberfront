@@ -32,6 +32,7 @@
     "@angular/router": "^20.0.0",
     "@angular/ssr": "^20.0.4",
     "@fullcalendar/angular": "^6.1.18",
+    "@fullcalendar/bootstrap5": "^6.1.18",
     "@fullcalendar/core": "^6.1.18",
     "@fullcalendar/daygrid": "^6.1.18",
     "@fullcalendar/interaction": "^6.1.18",

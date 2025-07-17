@@ -7,7 +7,7 @@ import {
   PLATFORM_ID,
   ChangeDetectorRef,
 } from '@angular/core';
-import { CalendarOptions } from '@fullcalendar/core';
+import { CalendarOptions, DateSelectArg } from '@fullcalendar/core';
 import {
   FullCalendarComponent,
   FullCalendarModule,
@@ -15,6 +15,7 @@ import {
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import thLocale from '@fullcalendar/core/locales/th';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Articles } from '../../../services/article';
 import { HttpClient } from '@angular/common/http';
@@ -37,7 +38,7 @@ export class BookingCalendar implements OnInit, AfterViewInit {
     endTime: '',
     room: null as number | null,
     date: new Date(),
-    datestring: ""
+    datestring: '',
   };
   selectedSlot: any = null;
   calendarOptions: CalendarOptions;
@@ -50,20 +51,16 @@ export class BookingCalendar implements OnInit, AfterViewInit {
     private cdr: ChangeDetectorRef
   ) {
     this.calendarOptions = {
+      locale: thLocale,
       plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
       initialView: 'dayGridMonth', // ✅ ใช้ view เดือน
       headerToolbar: {
-        left: 'title',
-        right: 'today timeGridWeek dayGridMonth prev,next',
+        center: 'title',
+        left: 'prev,next today',
+        right: 'timeGridWeek dayGridMonth',
       },
       editable: false,
       selectable: true,
-      // select: (info) => {
-      //   const title = prompt('หัวข้อการจองห้อง?');
-      //   if (title) {
-      //     this.bookRoom(title, info.start, info.end);
-      //   }
-      // },
       select: this.onSelectSlot.bind(this),
       events: [],
     };
@@ -71,7 +68,7 @@ export class BookingCalendar implements OnInit, AfterViewInit {
 
   async ngOnInit() {
     this.rooms = await this.bookingService.getRooms(); // ✅ ใช้ this.
-    this.cdr.detectChanges(); 
+    this.cdr.detectChanges();
     console.log('Available rooms:', this.rooms);
   }
 
@@ -88,8 +85,14 @@ export class BookingCalendar implements OnInit, AfterViewInit {
     calendarApi.addEventSource(bookings);
   }
 
-  onSelectSlot(info: any) {
+  async onSelectSlot(info: DateSelectArg) {
     this.selectedSlot = info;
+    const day = info.start;
+
+    if (day.getDay() === 0 || day.getDay() === 6) {
+      alert('ไม่สามารถจองในวันหยุดสุดสัปดาห์ได้');
+      return;
+    }
 
     this.bookingData = {
       title: '',
@@ -97,11 +100,15 @@ export class BookingCalendar implements OnInit, AfterViewInit {
       startTime: '09:00',
       endTime: '09:00', // เพิ่ม 1 ชั่วโมงเป็นค่าเริ่มต้น
       room: this.selectedRoomId ? this.selectedRoomId : null,
-      datestring: this.formatDateOnly(info.start),
+      datestring: this.formatDateOnly(new Date(info.start)),
       date: info.start,
     };
 
-    const modal = new bootstrap.Modal(document.getElementById('bookingModal'));
+    console.log('Booking data:', this.bookingData);
+
+    const modal = await new bootstrap.Modal(
+      document.getElementById('bookingModal')
+    );
     modal.show();
   }
 
@@ -143,7 +150,10 @@ export class BookingCalendar implements OnInit, AfterViewInit {
       .slice(0, 16);
   }
 
-formatDateOnly(date: Date): string {
-  return date.toISOString().slice(0, 10); // เช่น "2025-07-17"
-}
+  formatDateOnly(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
 }

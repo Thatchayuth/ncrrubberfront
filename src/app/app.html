@@ -1,5 +1,15 @@
 <app-headder></app-headder>
 <main>
-  <div class="main-content container my-4 container-minwidth"><router-outlet></router-outlet></div>
+  <div ><router-outlet></router-outlet></div>
 </main>
 <app-footer></app-footer>
+
+
+<button
+  #scrollTopBtn
+  class="btn btn-primary position-fixed bottom-0 end-0 m-4 rounded-circle shadow"
+  style="width: 48px; height: 48px; display: none;"
+  title="กลับด้านบน"
+>
+  ↑
+</button>

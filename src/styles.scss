@@ -7,10 +7,12 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  padding-top: 1px;
 }
 
 main {
   flex: 1 0 auto;
+  overflow-y: auto; 
   /* ให้ main ส่วนขยายเต็มพื้นที่ */
 }
 

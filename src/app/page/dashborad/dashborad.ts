@@ -3,7 +3,7 @@ import { RouterModule } from '@angular/router';
 import { Articles } from '../../../services/article';
 import { CommonModule } from '@angular/common';
 import { Article } from '../../../models/article.model';
-
+import { ChangeDetectorRef } from '@angular/core';
 @Component({
   selector: 'app-dashborad',
   imports: [RouterModule, CommonModule ],
@@ -11,14 +11,16 @@ import { Article } from '../../../models/article.model';
   styleUrl: './dashborad.scss'
 })
 export class Dashborad implements OnInit , OnDestroy {
-  articles;
+  articles = [];
    baseUrl = 'http://localhost:1337';
-  constructor(private Article : Articles) { }
+  constructor(private Article : Articles,private cdr : ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.Article.getArticles().subscribe({
       next: (res) => {
+        
         this.articles = res;
+         this.cdr.detectChanges();
         console.log('Articles fetched successfully:', this.articles);
       },
       error: (err) => console.error('Error fetching articles:', err),

@@ -8,7 +8,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './headder.scss',
 })
 export class Headder {
-  logoUrl = 'public/images/NCR-11.png';
+  // logoUrl = 'public/images/NCR-11.png';
   private toastr = inject(ToastrService);
   isScrolled  = false;
   constructor() {}

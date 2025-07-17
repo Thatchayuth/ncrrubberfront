@@ -29,3 +29,18 @@
     color: #6c757d;
   }
 }
+
+/* สำหรับ dayGridMonth */
+.fc-day-sat, .fc-day-sun {
+  background-color: #f8f9fa;  /* เทาอ่อน เห็นได้ชัดแต่ไม่โดด */
+  pointer-events: none;       /* ปิดการคลิก */
+  opacity: 0.6;
+}
+
+/* ป้องกันไม่ให้ลากจองใน week/day view ด้วย */
+.fc-timegrid-col.fc-day-sat, 
+.fc-timegrid-col.fc-day-sun {
+  background-color: #f8f9fa;
+  pointer-events: none;
+  opacity: 0.6;
+}
