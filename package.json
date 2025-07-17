@@ -45,7 +45,8 @@
     "ng2-charts": "^8.0.0",
     "ngx-toastr": "^19.0.0",
     "rxjs": "~7.8.0",
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0",
+    "zone.js": "^0.15.1"
   },
   "devDependencies": {
     "@analogjs/vite-plugin-angular": "^1.19.1",
