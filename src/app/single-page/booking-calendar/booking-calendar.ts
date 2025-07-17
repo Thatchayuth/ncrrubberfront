@@ -68,7 +68,9 @@ export class BookingCalendar implements OnInit, AfterViewInit {
 
   async ngOnInit() {
     this.rooms = await this.bookingService.getRooms(); // ✅ ใช้ this.
+    setTimeout(() => {
     this.cdr.detectChanges();
+  });
     console.log('Available rooms:', this.rooms);
   }
 
