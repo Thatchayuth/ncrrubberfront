@@ -69,8 +69,8 @@ export class BookingCalendar implements OnInit, AfterViewInit {
   async ngOnInit() {
     this.rooms = await this.bookingService.getRooms(); // ✅ ใช้ this.
     setTimeout(() => {
-    this.cdr.detectChanges();
-  });
+      this.cdr.detectChanges();
+    });
     console.log('Available rooms:', this.rooms);
   }
 
@@ -108,6 +108,10 @@ export class BookingCalendar implements OnInit, AfterViewInit {
 
     console.log('Booking data:', this.bookingData);
 
+    this.loadExistingBookings(
+      this.selectedRoomId!,
+      this.bookingData.datestring
+    );
     const modal = await new bootstrap.Modal(
       document.getElementById('bookingModal')
     );
@@ -121,6 +125,12 @@ export class BookingCalendar implements OnInit, AfterViewInit {
     const end = new Date(
       `${this.bookingData.datestring}T${this.bookingData.endTime}`
     );
+
+    if (this.checkBookingOverlap()) {
+      alert('ช่วงเวลานี้มีการจองอยู่แล้ว กรุณาเลือกเวลาอื่น');
+      return;
+    }
+
     const payload = {
       data: {
         title: this.bookingData.title,
@@ -143,6 +153,39 @@ export class BookingCalendar implements OnInit, AfterViewInit {
         modal.hide();
 
         this.selectRoom(this.selectedRoomId!); // ✅ ใช้ ! เพื่อบอกว่าไม่เป็น null
+      });
+  }
+
+  checkBookingOverlap(): boolean {
+    const selectedDate = this.bookingData.datestring;
+    const newStart = new Date(`${selectedDate}T${this.bookingData.startTime}`);
+    const newEnd = new Date(`${selectedDate}T${this.bookingData.endTime}`);
+
+    for (const booking of this.existingBookings) {
+      const existingStart = new Date(booking.startTime);
+      const existingEnd = new Date(booking.endTime);
+
+      const overlap = newStart < existingEnd && newEnd > existingStart;
+
+      if (overlap) {
+        return true;
+      }
+    }
+    return false;
+  }
+  existingBookings: { startTime: Date; endTime: Date }[] = [];
+  loadExistingBookings(roomId: number, date: string) {
+
+    this.http
+      .get<any>(
+        `http://localhost:1337/api/bookings?filters[room][id][$eq]=${roomId}&filters[startTime][$contains]=${date}`
+      )
+      .subscribe((res) => {
+        this.existingBookings = res.data.map((b: any) => ({
+          startTime: new Date(b.attributes.startTime),
+          endTime: new Date(b.attributes.endTime),
+        }));
+        console.log('Existing bookings:', this.existingBookings);
       });
   }
 
