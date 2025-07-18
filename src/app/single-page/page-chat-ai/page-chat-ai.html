@@ -1,47 +1,129 @@
-<div #scrollContainer class="flex-grow-1 overflow-auto mb-3 border rounded p-3 bg-light" style="height: 70vh">
-  <div *ngFor="let msg of messages" [ngClass]="{
+<div
+  #scrollContainer
+  class="flex-grow-1 overflow-auto mb-3 border rounded p-3 bg-light"
+  style="height: 70vh"
+>
+  <div
+    *ngFor="let msg of messages"
+    [ngClass]="{
       'text-end': msg.role === 'user',
       'text-start': msg.role === 'assistant'
-    }" class="mb-3">
-    <div class="d-inline-block px-3 py-2 rounded" [ngClass]="
+    }"
+    class="mb-3"
+  >
+    <div
+      class="d-inline-block px-3 py-2 rounded"
+      [ngClass]="
         msg.role === 'user'
           ? 'bg-primary text-white'
           : 'bg-secondary text-white'
-      ">
+      "
+    >
       <div *ngIf="msg.content === '...'" class="typing-dots">
         <span>.</span><span>.</span><span>.</span>
       </div>
       <div *ngIf="msg.content !== '...'">{{ msg.content }}</div>
 
-      <div *ngIf="msg.chartData" style="
+      <div
+        *ngIf="msg.chartData"
+        style="
           width: 350px;
           height: 220px;
           margin-top: 1rem;
           background-color: white;
-        " (click)="openChartModal(msg)">
-        <canvas baseChart [data]="msg.chartData" [type]="msg.chartType" [options]="msg.chartOptions">
+        "
+        (click)="openChartModal(msg)"
+      >
+        <canvas
+          baseChart
+          [data]="msg.chartData"
+          [type]="msg.chartType"
+          [options]="msg.chartOptions"
+        >
         </canvas>
       </div>
     </div>
   </div>
 </div>
 
-<form (submit)="sendMessage()" class="d-flex gap-2">
-  <input [(ngModel)]="userInput" name="chatInput" placeholder="พิมพ์ข้อความ..." class="form-control"
-    autocomplete="off" />
-  <button type="submit" class="btn btn-primary">ส่ง</button>
+<form (submit)="sendMessage()" class="d-flex gap-2 align-items-center mt-2">
+  <!-- แนบไฟล์ Excel -->
+  <div class="position-relative">
+    <input
+      type="file"
+      (change)="onFileChange($event)"
+      accept=".xlsx, .xls"
+      id="excelUpload"
+      hidden
+    />
+    <label for="excelUpload" class="btn btn-outline-secondary btn-sm mb-0">
+      <i class="bi bi-paperclip"></i> Excel
+    </label>
+  </div>
 
+  <!-- แสดงชื่อไฟล์ (ถ้ามี) -->
+  <div *ngIf="attachedFileName" class="small text-muted me-2">
+    {{ attachedFileName }}
+  </div>
+
+  <!-- กล่องพิมพ์ข้อความ -->
+  <input
+    [(ngModel)]="userInput"
+    name="chatInput"
+    placeholder="พิมพ์ข้อความ..."
+    class="form-control"
+    autocomplete="off"
+  />
+
+  <!-- ปุ่มส่ง -->
+  <button type="submit" class="btn btn-primary">ส่ง</button>
 
   <div class="modal fade" id="chartModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">ดูกราฟขนาดเต็ม</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="ปิด"></button>
+        <div class="modal-header d-flex flex-column align-items-start">
+          <div
+            class="d-flex w-100 justify-content-between align-items-center mb-2"
+          >
+            <h5 class="modal-title">ดูกราฟขนาดเต็ม</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="ปิด"
+            ></button>
+          </div>
+
+          <div class="btn-group" role="group">
+            <button
+              class="btn btn-outline-primary btn-sm"
+              (click)="exportChartAsPNG()"
+            >
+              <i class="bi bi-image"></i> PNG
+            </button>
+            <button
+              class="btn btn-outline-danger btn-sm"
+              (click)="exportChartAsPDF()"
+            >
+              <i class="bi bi-file-earmark-pdf"></i> PDF
+            </button>
+            <button
+              class="btn btn-outline-success btn-sm"
+              (click)="exportChartAsExcel()"
+            >
+              <i class="bi bi-file-earmark-excel"></i> Excel
+            </button>
+          </div>
         </div>
-        <div class="modal-body text-center" style="min-height: 400px;">
-          <canvas baseChart *ngIf="selectedChartData" [data]="selectedChartData" [type]="selectedChartType"
-            [options]="selectedChartOptions">
+        <div class="modal-body text-center" style="min-height: 400px">
+          <canvas
+            #chartCanvas
+            baseChart
+            *ngIf="selectedChartData"
+            [data]="selectedChartData"
+            [type]="selectedChartType"
+            [options]="selectedChartOptions"
+          >
           </canvas>
         </div>
       </div>

@@ -5,6 +5,11 @@ import { BaseChartDirective } from 'ng2-charts';
 import { registerChartJS } from '../../utils/chart-register';
 import { ChatServices } from '../../../services/chat';
 import { ChangeDetectorRef } from '@angular/core';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
+import * as Papa from 'papaparse';
 declare var bootstrap: any;
 // ลงทะเบียน controller, elements, scales ที่จะใช้
 @Component({
@@ -15,6 +20,7 @@ declare var bootstrap: any;
 })
 export class PageChatAI {
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+  @ViewChild('chartCanvas', { static: false }) chartCanvas!: ElementRef;
   selectedChartData: any = null;
   selectedChartType: any = null;
   selectedChartOptions: any = null;
@@ -22,28 +28,16 @@ export class PageChatAI {
   messages: any[] = [];
   isThinking = false;
 
-  constructor(private chatService: ChatServices, private cdr: ChangeDetectorRef) {
+  attachedFileName: string | null = null;
+  excelData: any = null;
+  isLoadingExcel: boolean = false;
+
+  constructor(
+    private chatService: ChatServices,
+    private cdr: ChangeDetectorRef
+  ) {
     registerChartJS();
   }
-
-  // chartData = {
-  //   labels: ['เม.ย.', 'พ.ค.', 'มิ.ย.'],
-  //   datasets: [
-  //     {
-  //       label: 'ยอดขาย',
-  //       data: [400000, 420000, 530000],
-  //       backgroundColor: 'rgba(13, 110, 253, 0.7)',
-  //     },
-  //   ],
-  // };
-
-  // chartOptions = {
-  //   responsive: true,
-  //   maintainAspectRatio: false,
-  // };
-
-  // chartType: 'bar' = 'bar';
-
   sendMessage() {
     let result: any | null = null;
     if (!this.userInput.trim()) return;
@@ -110,7 +104,7 @@ export class PageChatAI {
   }
 
   scrollToBottom() {
-    console.log('scroll', this.messages)
+    console.log('scroll', this.messages);
     setTimeout(() => {
       this.cdr.detectChanges();
       this.scrollContainer.nativeElement.scrollTop =
@@ -130,4 +124,74 @@ export class PageChatAI {
     const modal = new bootstrap.Modal(document.getElementById('chartModal')!);
     modal.show();
   }
+
+  exportChartAsPNG() {
+    const canvas = this.chartCanvas.nativeElement as HTMLCanvasElement;
+    const image = canvas.toDataURL('image/png');
+    const link = document.createElement('a');
+    link.href = image;
+    link.download = 'chart.png';
+    link.click();
+  }
+
+  // 2. Export PDF
+  exportChartAsPDF() {
+    html2canvas(this.chartCanvas.nativeElement).then((canvas) => {
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF();
+      const width = pdf.internal.pageSize.getWidth();
+      const height = canvas.height * (width / canvas.width);
+      pdf.addImage(imgData, 'PNG', 0, 0, width, height);
+      pdf.save('chart.pdf');
+    });
+  }
+
+  // 3. Export Excel
+  exportChartAsExcel() {
+    const labels = this.selectedChartData.labels;
+    const dataset = this.selectedChartData.datasets[0];
+
+    const data = labels.map((label: any, i: number) => ({
+      ชื่อ: label,
+      ค่า: dataset.data[i],
+    }));
+
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = {
+      Sheets: { ChartData: worksheet },
+      SheetNames: ['ChartData'],
+    };
+    const excelBuffer = XLSX.write(workbook, {
+      bookType: 'xlsx',
+      type: 'array',
+    });
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    saveAs(blob, 'chart-data.xlsx');
+  }
+
+  onFileChange(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    this.attachedFileName = file.name;
+    this.isLoadingExcel = true;
+
+    const reader: FileReader = new FileReader();
+    reader.onload = (e: any) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: 'array' });
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+      const jsonData = XLSX.utils.sheet_to_json(worksheet, { defval: '' });
+
+      this.excelData = jsonData;
+      this.isLoadingExcel = false;
+      console.log('Excel data:', jsonData);
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+getExcelKeys(data: any[]): string[] {
+  return data.length > 0 ? Object.keys(data[0]) : [];
+}
 }
