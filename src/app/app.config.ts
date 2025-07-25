@@ -1,7 +1,7 @@
 import {
   ApplicationConfig,
   provideBrowserGlobalErrorListeners,
-  provideZonelessChangeDetection,
+  provideZonelessChangeDetection, isDevMode,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
@@ -12,7 +12,8 @@ import {
 } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr';
-import { provideHttpClient, withFetch } from '@angular/common/http';  // <-- เพิ่มบรรทัดนี้
+import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideServiceWorker } from '@angular/service-worker';  // <-- เพิ่มบรรทัดนี้
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
@@ -25,6 +26,18 @@ export const appConfig: ApplicationConfig = {
       positionClass: 'toast-top-right',
       
     }),
-    provideHttpClient(withFetch()),  // <-- เพิ่มบรรทัดนี้
+    provideHttpClient(withFetch()), provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+          }), provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+          }), provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+          }), provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+          }),  // <-- เพิ่มบรรทัดนี้
   ],
 };
