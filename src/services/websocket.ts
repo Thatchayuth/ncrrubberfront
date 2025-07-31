@@ -1,46 +1,25 @@
+// src/app/services/web-socket.service.ts
 import { Injectable } from '@angular/core';
-import { Subject, timer } from 'rxjs';
-import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
+import { io, Socket } from 'socket.io-client';
+import { Observable } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
-export class Websocket {
-
-  private socket$: WebSocketSubject<any>;
-  public messages$: Subject<string> = new Subject();
-
-  private url = 'ws://localhost:8000/ws/line1'; // เปลี่ยนให้ตรงกับ FastAPI
-  private reconnectDelay = 3000;
+@Injectable({ providedIn: 'root' })
+export class WebSocketService {
+  private socket: Socket;
 
   constructor() {
-    this.connect();
+    this.socket = io('http://localhost:1337'); // เปลี่ยนเป็น URL ของ Strapi ถ้ารันใน server จริง
   }
 
-  private connect() {
-    this.socket$ = webSocket(this.url);
-
-    this.socket$.subscribe({
-      next: msg => this.messages$.next(msg),
-      error: err => {
-        console.warn('WebSocket error', err);
-        this.reconnect();
-      },
-      complete: () => {
-        console.warn('WebSocket closed');
-        this.reconnect();
-      }
+  onBookingCreated(): Observable<any> {
+    return new Observable((observer) => {
+      this.socket.on('bookingCreated', (data) => {
+        observer.next(data); // 👈 ส่งข้อมูลต่อให้ component ที่ subscribe
+      });
     });
   }
 
-  private reconnect() {
-    timer(this.reconnectDelay).subscribe(() => {
-      console.log('Reconnecting WebSocket...');
-      this.connect();
-    });
-  }
-
-  sendMessage(message: string) {
-    this.socket$.next(message);
+  emitBooking(data: any) {
+    this.socket.emit('newBooking', data);
   }
 }

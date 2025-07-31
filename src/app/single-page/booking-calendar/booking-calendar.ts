@@ -20,6 +20,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Articles } from '../../../services/article';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { WebSocketService } from '../../../services/websocket';
 declare var bootstrap: any;
 @Component({
   selector: 'app-booking-calendar',
@@ -48,7 +49,8 @@ export class BookingCalendar implements OnInit, AfterViewInit {
     private bookingService: Articles,
     @Inject(PLATFORM_ID) private platformId: Object,
     private http: HttpClient,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+     private webSocketService: WebSocketService,
   ) {
     this.calendarOptions = {
       locale: thLocale,
@@ -72,6 +74,27 @@ export class BookingCalendar implements OnInit, AfterViewInit {
       this.cdr.detectChanges();
     });
     console.log('Available rooms:', this.rooms);
+
+    
+    this.webSocketService.onBookingCreated().subscribe((booking) => {
+      console.log('New booking received:', booking);
+      debugger
+    if (
+      this.selectedRoomId &&
+      booking.room === this.selectedRoomId
+    ) {
+      // ✅ ถ้า booking ใหม่ตรงกับห้องที่เลือกอยู่
+      const calendarApi = this.calendarComponent.getApi();
+      calendarApi.addEvent({
+        title: booking.title,
+        start: booking.startTime,
+        end: booking.endTime,
+        room: this.selectedRoomId ? this.selectedRoomId : null,
+      });
+
+      this.loadExistingBookings(this.selectedRoomId, this.bookingData.datestring); // อัปเดตช่วงเวลา
+    }
+  });
   }
 
   ngAfterViewInit() {
@@ -137,7 +160,7 @@ export class BookingCalendar implements OnInit, AfterViewInit {
         description: this.bookingData.description,
         startTime: start.toISOString(),
         endTime: end.toISOString(),
-        room: this.selectedRoomId ? this.selectedRoomId : null,
+        room: this.selectedRoomId ? { id: this.selectedRoomId } : null,
       },
     };
 
